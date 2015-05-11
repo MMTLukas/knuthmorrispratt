@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fibonacci Comparison</title>
+    <link href="css/c3.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<div id="chart"></div>
+
+<!-- Load d3.js and c3.js -->
+<script src="js/d3.js" charset="utf-8"></script>
+<script src="js/c3.js"></script>
+<script type="text/javascript" rel="script">
+
+    // 1st Chart
+    // LN x-axis
+    var valuesX = ['x', 10, 20, 30, 40, 50, 60, 70, 80, 90, 100];
+    var valuesNaive = ['Naive', 459958,
+        4786224,
+        11700021,
+        78913876,
+        81659465,
+        81527337,
+        80352704,
+        80338516,
+        81130832,
+        79572554];
+
+    var valuesKMP = ['Knuth-Morris-Pratt', 566699,
+        5113662,
+        12362171,
+        84625389,
+        84423197,
+        84466032,
+        83340453,
+        84292186,
+        83119817,
+        84948117];
+
+    window.onload = function () {
+        var chart = c3.generate({
+            bindto: '#chart',
+            padding: {
+                top: 10,
+                right: 20
+            },
+            size: {
+                height: 600
+            },
+            data: {
+                x: 'x',
+                columns: [
+                    valuesX,
+                    valuesNaive,
+                    valuesKMP
+                ],
+                labels: {
+                    format: function (v, id, i, j) {
+                        return (v / 100000).toFixed(2) + " ms";
+                    }
+                }
+            },
+            axis: {
+                y: {
+                    label: {
+                        text: "Duration [ms]",
+                        position: "outer-middle"
+                    },
+                    tick: {
+                        format: function (v, id, i, j) {
+                            return (v / 1000).toFixed(0);
+                        }
+                    }
+                },
+                x: {
+                    label: {
+                        text: "Prefix length of parkinson gens",
+                        position: "outer-center"
+                    }
+                }
+            },
+            grid: {
+                x: {
+                    show: true
+                },
+                y: {
+                    show: true
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>
