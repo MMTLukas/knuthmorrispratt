@@ -42,52 +42,57 @@ FileReader.start();
 var TextSearch = {
     start: function () {
         console.log("\nStart search naive...");
-        var measurements = this.measure(this.searchTextNaive);
-        console.log(measurements);
+        var result = this.measure(this.searchTextNaive);
+        console.log("Time: ", result.measurements);
+        console.log("Amount of founds: ", result.amount);
 
         console.log("\nStart search KMP...");
         var measurements = this.measure(this.searchTextKMP);
-        console.log(measurements);
+        console.log("Time: ", result.measurements);
+        console.log("Amount of founds: ", result.amount);
     },
-    measure: function (algorithm, runs, steps) {
+    measure: function (algorithm, runs, steps, max) {
         var steps = steps || 10;
-        var runs = runs || 10;
+        var runs = runs || 5;
+        var max = max || 100;
         var measurements = [];
-        var indices = [];
+        var amount = [], cnt = 0;
 
-        for (var j = 10; j <= 100; j += steps) {
+        for (var j = 10; j <= max; j += steps) {
             var resultsRuns = [];
             for (var i = 0; i < runs; i++) {
                 var timeStart = process.hrtime();
-
-                var idx = algorithm(this.text, this.word.substr(0,j));
-                indices.push(idx);
-
+                cnt = algorithm(this.text, this.word.substr(0, j));
                 var duration = process.hrtime(timeStart);
                 var durationNanoSeconds = duration[0] * Math.pow(10, 9) + duration[1];
                 resultsRuns.push(durationNanoSeconds);
             }
+            amount.push(cnt);
 
             var average = Math.ceil(Math.average(resultsRuns));
             measurements.push(average);
         }
-        return measurements;
+        return {
+            measurements: measurements,
+            amount: amount
+        };
     },
     searchTextNaive: function (text, word) {
         var maxIterations = text.length - word.length;
         var idxWord = 0, idxText = 0;
+        var cnt = 0;
 
         while (idxText <= maxIterations) {
             while (text[idxWord + idxText] == word[idxWord]) {
                 idxWord++;
                 if (idxWord == word.length) {
-                    return true;
+                    cnt++;
                 }
             }
             idxText++;
             idxWord = 0;
         }
-        return false;
+        return cnt;
     },
     searchTextKMP: function (text, word) {
         var borders = new Array(word.length + 1);
@@ -95,18 +100,19 @@ var TextSearch = {
 
         var maxIterations = text.length - word.length;
         var idxWord = 0, idxText = 0;
+        var cnt = 0;
 
         while (idxText <= maxIterations) {
             while (text[idxWord + idxText] == word[idxWord]) {
                 idxWord++;
                 if (idxWord == word.length) {
-                    return true;
+                    cnt++;
                 }
             }
             idxText = idxText + (idxWord - borders[idxWord]);
             idxWord = Math.max(0, borders[idxWord])
         }
-        return false;
+        return cnt;
     },
     computeBorders: function (borders, wordLength, word) {
         borders[0] = -1;
