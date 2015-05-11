@@ -22,7 +22,7 @@ var valuesKMP = ['Knuth-Morris-Pratt',
     2478752979,
     2464402669,
     2465505035,
-    2466996932,s
+    2466996932,
     2469946192 ];
 //Amount of founds [ 3392, 793, 20, 4, 1, 1, 1, 1, 1, 1 ]
 
@@ -45,19 +45,19 @@ window.onload = function () {
             ],
             labels: {
                 format: function (v, id, i, j) {
-                    return (v / 100000).toFixed(2) + " ms";
+                    return (v / 1000000000).toFixed(3   ) + " sec";
                 }
             }
         },
         axis: {
             y: {
                 label: {
-                    text: "Duration [ms]",
+                    text: "Duration [sec]",
                     position: "outer-middle"
                 },
                 tick: {
                     format: function (v, id, i, j) {
-                        return (v / 1000).toFixed(0);
+                        return (v / 1000000000).toFixed(1);
                     }
                 }
             },
